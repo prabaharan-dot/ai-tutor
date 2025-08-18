@@ -1,4 +1,4 @@
-# Learning Management System
+# AI Tutor - Learning Management System
 
 This project is a web application designed for managing online courses, user registration, and authentication, along with features for course enrollment, progress tracking, quizzes, results display, and a leaderboard system.
 
@@ -33,3 +33,17 @@ This project is a web application designed for managing online courses, user reg
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Authors
+
+- **prabaharan-dot** - *Initial work*
+
+## Acknowledgments
+
+* Hat tip to anyone whose code was used
+* Inspired by modern e-learning platforms
+* Special thanks to the open source community
