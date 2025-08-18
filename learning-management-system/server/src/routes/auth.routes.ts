@@ -24,11 +24,3 @@ router.post('/login', loginValidation, login);
 router.post('/google', googleLogin);
 
 export default router;
-│   │   │   ├── course.routes.ts
-│   │   │   └── quiz.routes.ts
-│   │   ├── middleware
-│   │   │   └── auth.middleware.ts
-│   │   └── app.ts
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md
