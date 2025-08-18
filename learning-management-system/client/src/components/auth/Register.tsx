@@ -1,18 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Typography, Container, Box, Paper } from '@mui/material';
+import { TextField, Button, Typography, Container, Box, Paper, CircularProgress } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
-import authService from '../../services/auth.service';
+import authService, { RegisterData } from '../../services/auth.service';
+
+// Define Google Sign-In types
+declare global {
+    interface Window {
+        google: {
+            accounts: {
+                id: {
+                    initialize: (config: {
+                        client_id: string;
+                        callback: (response: { credential: string }) => void;
+                    }) => void;
+                    prompt: () => void;
+                    renderButton: (element: HTMLElement, config: any) => void;
+                };
+            };
+        };
+    }
+}
 
 const Register: React.FC = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: '',
+    const [formData, setFormData] = useState<RegisterData & { confirmPassword: string }>({
+        username: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        role: 'student'
     });
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [googleScriptLoaded, setGoogleScriptLoaded] = useState(false);
+
+    useEffect(() => {
+        // Cleanup function to remove any existing Google Sign-In scripts
+        return () => {
+            const script = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+            if (script) {
+                script.remove();
+            }
+        };
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -24,50 +55,67 @@ const Register: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
 
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
+            setIsLoading(false);
             return;
         }
 
         try {
-            await authService.register(formData.name, formData.email, formData.password);
+            const { confirmPassword, ...registerData } = formData;
+            await authService.register(registerData);
             navigate('/courses');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Registration failed');
+            setError(err.message || 'Registration failed');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleGoogleLogin = async () => {
+        if (!process.env.REACT_APP_GOOGLE_CLIENT_ID) {
+            setError('Google Sign-In is not configured');
+            return;
+        }
+
         try {
-            // Load the Google Sign-In API script dynamically
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.async = true;
-            script.defer = true;
-            document.head.appendChild(script);
-
-            script.onload = () => {
-                // Initialize Google Sign-In
-                window.google.accounts.id.initialize({
-                    client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-                    callback: async (response: any) => {
-                        try {
-                            // Send the token to your backend
-                            await authService.googleLogin(response.credential);
-                            navigate('/courses');
-                        } catch (err: any) {
-                            setError(err.response?.data?.message || 'Google login failed');
-                        }
-                    },
-                });
-
-                // Render the Google Sign-In button
-                window.google.accounts.id.prompt();
-            };
+            if (!googleScriptLoaded) {
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                script.onload = () => {
+                    setGoogleScriptLoaded(true);
+                    initializeGoogleSignIn();
+                };
+                document.head.appendChild(script);
+            } else {
+                initializeGoogleSignIn();
+            }
         } catch (err: any) {
             setError('Google login failed');
         }
+    };
+
+    const initializeGoogleSignIn = () => {
+        window.google?.accounts.id.initialize({
+            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID!,
+            callback: async (response) => {
+                try {
+                    setIsLoading(true);
+                    await authService.googleLogin(response.credential);
+                    navigate('/courses');
+                } catch (err: any) {
+                    setError(err.message || 'Google login failed');
+                } finally {
+                    setIsLoading(false);
+                }
+            },
+        });
+
+        window.google?.accounts.id.prompt();
     };
 
     return (
@@ -80,9 +128,9 @@ const Register: React.FC = () => {
                     <form onSubmit={handleSubmit}>
                         <TextField
                             fullWidth
-                            label="Name"
-                            name="name"
-                            value={formData.name}
+                            label="Username"
+                            name="username"
+                            value={formData.username}
                             onChange={handleChange}
                             margin="normal"
                             required
@@ -128,8 +176,9 @@ const Register: React.FC = () => {
                             variant="contained"
                             color="primary"
                             sx={{ mt: 3 }}
+                            disabled={isLoading}
                         >
-                            Register
+                            {isLoading ? <CircularProgress size={24} /> : 'Register'}
                         </Button>
                         <Button
                             fullWidth
@@ -137,6 +186,7 @@ const Register: React.FC = () => {
                             startIcon={<GoogleIcon />}
                             onClick={handleGoogleLogin}
                             sx={{ mt: 2 }}
+                            disabled={isLoading}
                         >
                             Register with Google
                         </Button>
@@ -144,7 +194,10 @@ const Register: React.FC = () => {
                     <Box sx={{ mt: 2 }}>
                         <Typography align="center">
                             Already have an account?{' '}
-                            <Button onClick={() => navigate('/login')}>
+                            <Button 
+                                onClick={() => navigate('/login')}
+                                disabled={isLoading}
+                            >
                                 Login
                             </Button>
                         </Typography>
@@ -156,37 +209,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-│   │   │   ├── courses
-│   │   │   │   ├── CourseList.tsx
-│   │   │   │   └── CourseDetails.tsx
-│   │   │   ├── quiz
-│   │   │   │   ├── QuizComponent.tsx
-│   │   │   │   └── Results.tsx
-│   │   │   └── Leaderboard.tsx
-│   │   ├── services
-│   │   │   ├── auth.service.ts
-│   │   │   └── api.service.ts
-│   │   ├── App.tsx
-│   │   └── index.tsx
-│   ├── package.json
-│   └── tsconfig.json
-├── server
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── course.controller.ts
-│   │   │   └── quiz.controller.ts
-│   │   ├── models
-│   │   │   ├── user.model.ts
-│   │   │   ├── course.model.ts
-│   │   │   └── quiz.model.ts
-│   │   ├── routes
-│   │   │   ├── auth.routes.ts
-│   │   │   ├── course.routes.ts
-│   │   │   └── quiz.routes.ts
-│   │   ├── middleware
-│   │   │   └── auth.middleware.ts
-│   │   └── app.ts
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md

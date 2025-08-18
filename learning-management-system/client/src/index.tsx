@@ -1,41 +1,28 @@
-learning-management-system
-├── client
-│   ├── src
-│   │   ├── components
-│   │   │   ├── auth
-│   │   │   │   ├── Login.tsx
-│   │   │   │   └── Register.tsx
-│   │   │   ├── courses
-│   │   │   │   ├── CourseList.tsx
-│   │   │   │   └── CourseDetails.tsx
-│   │   │   ├── quiz
-│   │   │   │   ├── QuizComponent.tsx
-│   │   │   │   └── Results.tsx
-│   │   │   └── Leaderboard.tsx
-│   │   ├── services
-│   │   │   ├── auth.service.ts
-│   │   │   └── api.service.ts
-│   │   ├── App.tsx
-│   │   └── index.tsx
-│   ├── package.json
-│   └── tsconfig.json
-├── server
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── course.controller.ts
-│   │   │   └── quiz.controller.ts
-│   │   ├── models
-│   │   │   ├── user.model.ts
-│   │   │   ├── course.model.ts
-│   │   │   └── quiz.model.ts
-│   │   ├── routes
-│   │   │   ├── auth.routes.ts
-│   │   │   ├── course.routes.ts
-│   │   │   └── quiz.routes.ts
-│   │   ├── middleware
-│   │   │   └── auth.middleware.ts
-│   │   └── app.ts
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import App from './App';
+import theme from './theme';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

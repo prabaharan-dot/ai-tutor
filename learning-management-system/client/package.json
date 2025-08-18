@@ -1,41 +1,63 @@
-learning-management-system
-├── client
-│   ├── src
-│   │   ├── components
-│   │   │   ├── auth
-│   │   │   │   ├── Login.tsx
-│   │   │   │   └── Register.tsx
-│   │   │   ├── courses
-│   │   │   │   ├── CourseList.tsx
-│   │   │   │   └── CourseDetails.tsx
-│   │   │   ├── quiz
-│   │   │   │   ├── QuizComponent.tsx
-│   │   │   │   └── Results.tsx
-│   │   │   └── Leaderboard.tsx
-│   │   ├── services
-│   │   │   ├── auth.service.ts
-│   │   │   └── api.service.ts
-│   │   ├── App.tsx
-│   │   └── index.tsx
-│   ├── package.json
-│   └── tsconfig.json
-├── server
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── course.controller.ts
-│   │   │   └── quiz.controller.ts
-│   │   ├── models
-│   │   │   ├── user.model.ts
-│   │   │   ├── course.model.ts
-│   │   │   └── quiz.model.ts
-│   │   ├── routes
-│   │   │   ├── auth.routes.ts
-│   │   │   ├── course.routes.ts
-│   │   │   └── quiz.routes.ts
-│   │   ├── middleware
-│   │   │   └── auth.middleware.ts
-│   │   └── app.ts
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md
+{
+  "name": "ai-tutor-client",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^18.16.3",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "axios": "^1.4.0",
+    "chart.js": "^4.3.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.11.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^3.3.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^2.8.8",
+    "react-scripts": "^5.0.1"
+  }
+}

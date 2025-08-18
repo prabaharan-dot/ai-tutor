@@ -231,26 +231,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-│   │   └── index.tsx
-│   ├── package.json
-│   └── tsconfig.json
-├── server
-│   ├── src
-│   │   ├── controllers
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── course.controller.ts
-│   │   │   └── quiz.controller.ts
-│   │   ├── models
-│   │   │   ├── user.model.ts
-│   │   │   ├── course.model.ts
-│   │   │   └── quiz.model.ts
-│   │   ├── routes
-│   │   │   ├── auth.routes.ts
-│   │   │   ├── course.routes.ts
-│   │   │   └── quiz.routes.ts
-│   │   ├── middleware
-│   │   │   └── auth.middleware.ts
-│   │   └── app.ts
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md

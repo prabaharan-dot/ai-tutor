@@ -35,15 +35,32 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api.service';
 
+interface Module {
+    _id: string;
+    title: string;
+    description: string;
+    order: number;
+    content: string;
+    quiz?: {
+        _id: string;
+        title: string;
+        questions: number;
+    };
+}
+
 interface Course {
     _id: string;
     title: string;
-    level: string;
+    level: 'beginner' | 'intermediate' | 'advanced';
     status: 'draft' | 'published' | 'archived';
     enrolledStudents: string[];
-    modules: any[];
+    modules: Module[];
     createdAt: string;
+    description?: string;
 }
+
+type StatusColor = 'success' | 'warning' | 'error' | 'default';
+type AlertSeverity = 'success' | 'error' | 'warning' | 'info';
 
 const CourseManagement: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);
