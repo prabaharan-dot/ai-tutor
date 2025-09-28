@@ -5,7 +5,6 @@ export interface IUser extends Document {
     email: string;
     password?: string;
     googleId?: string;
-    role: string;
     enrolledCourses: mongoose.Types.ObjectId[];
     progress: {
         courseId: mongoose.Types.ObjectId;

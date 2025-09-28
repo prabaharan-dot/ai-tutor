@@ -43,3 +43,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default auth;
+│   │   └── app.ts
+│   ├── package.json
+│   └── tsconfig.json
+└── README.md
